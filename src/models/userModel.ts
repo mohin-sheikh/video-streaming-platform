@@ -6,6 +6,7 @@ interface User extends Document {
     username: string;
     email: string;
     password: string;
+    role: string;
     generateAuthToken(): string;
 }
 
@@ -13,6 +14,7 @@ const userSchema = new Schema<User>({
     username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    role: { type: String, default: 'user' },
 });
 
 userSchema.pre<User>('save', async function (next) {
@@ -30,7 +32,7 @@ userSchema.pre<User>('save', async function (next) {
 
 userSchema.methods.generateAuthToken = function (): string {
     const user = this;
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY || ''); // Replace with a secure secret key
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY || '');
     return token;
 };
 

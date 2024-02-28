@@ -1,5 +1,6 @@
 import express from 'express';
 import { videoController } from '../controllers/videoController';
+import authAdminMiddleware from '../middleware/authAdminMiddleware';
 
 const router = express.Router();
 
@@ -8,9 +9,9 @@ router.get('/videos', videoController.getAllVideos);
 router.get('/videos/:id', videoController.getVideoById);
 
 // Protected routes (requires authentication)
-router.post('/videos', videoController.createVideo);
-router.put('/videos/:id', videoController.updateVideo);
-router.delete('/videos/:id', videoController.deleteVideo);
+router.post('/upload', authAdminMiddleware, videoController.createVideo);
+router.put('/videos/:id', authAdminMiddleware, videoController.updateVideo);
+router.delete('/videos/:id', authAdminMiddleware, videoController.deleteVideo);
 
 // Additional video actions
 router.post('/videos/:id/comments', videoController.addComment);

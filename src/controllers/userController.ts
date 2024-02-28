@@ -35,6 +35,27 @@ const userController = {
         }
     },
 
+    registerAdminUser: async (req: Request, res: Response) => {
+        try {
+            const { username, email, password } = req.body;
+
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ error: 'User with this email already exists' });
+            }
+
+            const user = new User({ username, email, password, role: 'admin' });
+            await user.save();
+
+            const token = user.generateAuthToken();
+
+            res.status(201).json({ user, token });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
     loginUser: async (req: Request, res: Response) => {
         try {
             const { email, password } = req.body;
