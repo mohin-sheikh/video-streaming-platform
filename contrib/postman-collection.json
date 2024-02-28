@@ -2,10 +2,162 @@
     "info": {
         "_postman_id": "YOUR_UNIQUE_POSTMAN_ID",
         "name": "Video Streaming Platform",
-        "description": "API requests for testing the video streaming platform",
+        "description": "API requests for testing the video streaming platform with JWT authentication",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [
+        {
+            "name": "User Authentication",
+            "item": [
+                {
+                    "name": "Register User",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:3000/users/register",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "register"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"TestUser\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"password\"\n}"
+                        },
+                        "description": "Replace the raw JSON with your user registration data."
+                    }
+                },
+                {
+                    "name": "Login User",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:3000/users/login",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "login"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"password\"\n}"
+                        },
+                        "description": "Replace the raw JSON with your login data."
+                    }
+                },
+                {
+                    "name": "Get User Profile",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/users/profile",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "profile"
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "x-auth-token",
+                                "value": "YOUR_JWT_TOKEN_HERE",
+                                "description": "Replace with the actual JWT token obtained after login."
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/users",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/users/USER_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "USER_ID"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "method": "PUT",
+                        "url": {
+                            "raw": "http://localhost:3000/users/USER_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "USER_ID"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"UpdatedUser\",\n  \"email\": \"updateduser@example.com\"\n}"
+                        },
+                        "description": "Replace the raw JSON with your updated user data."
+                    }
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "http://localhost:3000/users/USER_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "USER_ID"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
         {
             "name": "Videos",
             "item": [
@@ -103,109 +255,6 @@
                             "path": [
                                 "videos",
                                 "VIDEO_ID"
-                            ]
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Users",
-            "item": [
-                {
-                    "name": "Get All Users",
-                    "request": {
-                        "method": "GET",
-                        "url": {
-                            "raw": "http://localhost:3000/users",
-                            "protocol": "http",
-                            "host": [
-                                "localhost"
-                            ],
-                            "port": "3000",
-                            "path": [
-                                "users"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "Get User by ID",
-                    "request": {
-                        "method": "GET",
-                        "url": {
-                            "raw": "http://localhost:3000/users/USER_ID",
-                            "protocol": "http",
-                            "host": [
-                                "localhost"
-                            ],
-                            "port": "3000",
-                            "path": [
-                                "users",
-                                "USER_ID"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "Create User",
-                    "request": {
-                        "method": "POST",
-                        "url": {
-                            "raw": "http://localhost:3000/users",
-                            "protocol": "http",
-                            "host": [
-                                "localhost"
-                            ],
-                            "port": "3000",
-                            "path": [
-                                "users"
-                            ]
-                        },
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"username\": \"SampleUser\",\n  \"email\": \"sampleuser@example.com\"\n}"
-                        },
-                        "description": "Replace the raw JSON with your user data."
-                    }
-                },
-                {
-                    "name": "Update User",
-                    "request": {
-                        "method": "PUT",
-                        "url": {
-                            "raw": "http://localhost:3000/users/USER_ID",
-                            "protocol": "http",
-                            "host": [
-                                "localhost"
-                            ],
-                            "port": "3000",
-                            "path": [
-                                "users",
-                                "USER_ID"
-                            ]
-                        },
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"username\": \"UpdatedUser\",\n  \"email\": \"updateduser@example.com\"\n}"
-                        },
-                        "description": "Replace the raw JSON with your updated user data."
-                    }
-                },
-                {
-                    "name": "Delete User",
-                    "request": {
-                        "method": "DELETE",
-                        "url": {
-                            "raw": "http://localhost:3000/users/USER_ID",
-                            "protocol": "http",
-                            "host": [
-                                "localhost"
-                            ],
-                            "port": "3000",
-                            "path": [
-                                "users",
-                                "USER_ID"
                             ]
                         }
                     }
