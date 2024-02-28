@@ -1,0 +1,216 @@
+{
+    "info": {
+        "_postman_id": "YOUR_UNIQUE_POSTMAN_ID",
+        "name": "Video Streaming Platform",
+        "description": "API requests for testing the video streaming platform",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Videos",
+            "item": [
+                {
+                    "name": "Get All Videos",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/videos",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "videos"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Video by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/videos/VIDEO_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "videos",
+                                "VIDEO_ID"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Video",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:3000/videos",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "videos"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Sample Video\",\n  \"url\": \"http://example.com/sample.mp4\"\n}"
+                        },
+                        "description": "Replace the raw JSON with your video data."
+                    }
+                },
+                {
+                    "name": "Update Video",
+                    "request": {
+                        "method": "PUT",
+                        "url": {
+                            "raw": "http://localhost:3000/videos/VIDEO_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "videos",
+                                "VIDEO_ID"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Updated Video Title\",\n  \"url\": \"http://example.com/updated.mp4\"\n}"
+                        },
+                        "description": "Replace the raw JSON with your updated video data."
+                    }
+                },
+                {
+                    "name": "Delete Video",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "http://localhost:3000/videos/VIDEO_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "videos",
+                                "VIDEO_ID"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Users",
+            "item": [
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/users",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/users/USER_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "USER_ID"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:3000/users",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"SampleUser\",\n  \"email\": \"sampleuser@example.com\"\n}"
+                        },
+                        "description": "Replace the raw JSON with your user data."
+                    }
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "method": "PUT",
+                        "url": {
+                            "raw": "http://localhost:3000/users/USER_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "USER_ID"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"UpdatedUser\",\n  \"email\": \"updateduser@example.com\"\n}"
+                        },
+                        "description": "Replace the raw JSON with your updated user data."
+                    }
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "http://localhost:3000/users/USER_ID",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "users",
+                                "USER_ID"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
