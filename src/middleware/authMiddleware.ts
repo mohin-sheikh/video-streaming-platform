@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 interface AuthRequest extends Request {
-    user?: any; // Replace 'any' with the actual type of your user object
+    user?: any;
 }
 
 const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -13,7 +13,7 @@ const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunctio
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY || '') as { _id: string }; // Replace with your secret key and adjust the decoded type
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY || '') as { _id: string };
         req.user = decoded;
         next();
     } catch (error) {

@@ -58,9 +58,12 @@ const userController = {
         }
     },
 
-    getUserProfile: async (req: Request, res: Response) => {
+    getUserProfile: async (req: any, res: Response) => {
         try {
-            const user = req; // Extracted from the authentication middleware
+            const user = await User.findOne({ _id: req.user._id }).select('-password -__v');
+            if (!user) {
+                return res.status(401).json({ error: 'Invalid email or password' });
+            }
 
             res.json(user);
         } catch (error) {
