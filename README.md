@@ -1,4 +1,3 @@
-```markdown
 # Video Streaming Platform
 
 This is a simple video streaming platform built with Node.js, Express.js, and MongoDB.
