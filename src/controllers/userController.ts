@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 
 const userController = {
     getAllUsers: async (req: Request, res: Response) => {
-        const users = await User.find();
+        const users = await User.find({ role: 'user' }).select('-password -__v');
         res.json(users);
     },
 
