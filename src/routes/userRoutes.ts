@@ -1,6 +1,7 @@
 import express from 'express';
 import userController from '../controllers/userController';
 import authMiddleware from '../middleware/authMiddleware';
+import authAdminMiddleware from '../middleware/authAdminMiddleware';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.post('/login', userController.loginUser);
 router.get('/profile', authMiddleware, userController.getUserProfile);
 
 // Other routes (similar to previous examples)
-router.get('/', userController.getAllUsers);
+router.get('/', authAdminMiddleware, userController.getAllUsers);
 router.get('/:id', userController.getUserById);
 router.put('/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUser);
