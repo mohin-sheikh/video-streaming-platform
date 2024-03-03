@@ -6,7 +6,7 @@ import AWS from 'aws-sdk';
 
 // Set up AWS S3
 const s3 = new AWS.S3();
-const S3_BUCKET = process.env.AWS_S3_BUCKET ?? '';
+const S3_BUCKET = process.env.S3_BUCKET_AWS ?? '';
 
 
 export const videoController = {
