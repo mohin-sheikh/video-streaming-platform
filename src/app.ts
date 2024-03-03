@@ -1,19 +1,27 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import morgan from 'morgan';
+import 'dotenv/config'
 import mongoose from 'mongoose';
+import AWS from 'aws-sdk';
+import fileUpload from 'express-fileupload'
 
 import videoRoutes from './routes/videoRoutes';
 import userRoutes from './routes/userRoutes';
 import errorHandler from './utils/errorHandler';
 
-dotenv.config();
+
+// Set up AWS
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
 
 const app = express();
 
+app.use(fileUpload())
+
 // Middlewares
 app.use(express.json());
-app.use(morgan('combined'));
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/videos', videoRoutes);
