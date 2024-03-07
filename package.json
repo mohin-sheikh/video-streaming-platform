@@ -4,8 +4,10 @@
   "description": "This is a boilerplate code for an express API with mongoose, written in typescript. Please replace the content with your own after cloning the repo.",
   "main": "build/app.js",
   "scripts": {
+    "start": "npm run build && node dist/app.js",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prestart": "npm run build"
   },
   "repository": {
     "type": "git",
