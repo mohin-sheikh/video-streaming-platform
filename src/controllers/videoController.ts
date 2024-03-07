@@ -2,12 +2,16 @@ import 'dotenv/config'
 import { Request, Response } from 'express';
 import VideoModel, { Video, Comment } from '../models/videoModel';
 import expressFileUpload from 'express-fileupload';
-import AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
-// Set up AWS S3
-const s3 = new AWS.S3();
+const s3Client = new S3Client({
+    credentials: {
+        accessKeyId: process.env.ACCESS_KEY_ID_AWS || '',
+        secretAccessKey: process.env.SECRET_ACCESS_KEY_AWS || '',
+    },
+});
+
 const S3_BUCKET = process.env.S3_BUCKET_AWS ?? '';
-
 
 export const videoController = {
     getAllVideos: async (req: Request, res: Response) => {
@@ -38,21 +42,16 @@ export const videoController = {
 
     createVideo: async (req: Request, res: Response) => {
         try {
-            // Extract video details from the request body
             const videoData: Video = req.body;
 
-            // Check if a file was uploaded
             if (!req.files || Object.keys(req.files).length === 0) {
                 return res.status(400).json({ error: 'No file uploaded' });
             }
 
-            // Get the uploaded file
             const videoFile = req.files.video as expressFileUpload.UploadedFile;
 
-            // Generate a timestamp to append to the filename
             const timestamp = new Date().toISOString().replace(/[-:T.]/g, '');
 
-            // Set up parameters for uploading to S3
             const params = {
                 Bucket: S3_BUCKET,
                 Key: `${timestamp}_${videoFile.name}`,
@@ -64,23 +63,18 @@ export const videoController = {
             }
             videoData.tags = videoData.tags.toLocaleString().split(',');
 
-            // Upload the file to S3
-            s3.upload(params, async (err: any, data: { Location: string; }) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).json({ error: 'Error uploading video to S3' });
-                }
+            const uploadCommand = new PutObjectCommand(params);
+            await s3Client.send(uploadCommand);
 
-                // Update the videoData with the S3 URL and other fields
-                videoData.url = data.Location;
+            const s3Url = `https://${S3_BUCKET}.s3.${process.env.S3_BUCKET_AWS_REGION}.amazonaws.com/${params.Key}`;
 
-                // Save the video details to the database
-                const newVideo = await VideoModel.create(videoData);
+            videoData.url = s3Url;
 
-                res.json({
-                    message: 'Video uploaded and details saved successfully',
-                    video: newVideo,
-                });
+            const newVideo = await VideoModel.create(videoData);
+
+            res.json({
+                message: 'Video uploaded and details saved successfully',
+                video: newVideo,
             });
         } catch (error) {
             console.error(error);

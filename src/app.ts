@@ -1,19 +1,11 @@
 import express from 'express';
 import 'dotenv/config'
 import mongoose from 'mongoose';
-import AWS from 'aws-sdk';
 import fileUpload from 'express-fileupload'
 
 import videoRoutes from './routes/videoRoutes';
 import userRoutes from './routes/userRoutes';
 import errorHandler from './utils/errorHandler';
-
-
-// Set up AWS
-AWS.config.update({
-  accessKeyId: process.env.ACCESS_KEY_ID_AWS,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY_AWS
-});
 
 const app = express();
 
