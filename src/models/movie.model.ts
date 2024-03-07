@@ -19,6 +19,36 @@ const movieGenres = [
     "Thriller", "War", "Western",
 ];
 
+export interface IMovieDocument extends mongoose.Document {
+    movieId: string;
+    title: string;
+    description: string;
+    releaseDate: Date;
+    genre: string[];
+    imageUrl: string[];
+    ratings: {
+        source: string;
+        value: string;
+    }[];
+    imdbRating: string;
+    imdbVotes: string;
+    type: string;
+    director: string;
+    runtime: string;
+    released: string;
+    rated: string;
+    year: string;
+    writer: string;
+    actors: string;
+    plot: string;
+    language: string;
+    country: string;
+    awards: string;
+    poster: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 const movieSchema = new mongoose.Schema(
     {
         movieId: {
