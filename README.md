@@ -1,162 +1,122 @@
-# Video Streaming Platform
+# KatMovieClone
 
-This is a simple Video Streaming Platform developed using Node.js, Express.js, and TypeScript. The project includes user authentication with JWT, CRUD operations for videos, and user management.
+A movie streaming and download platform built with Node.js and TypeScript, offering users a seamless experience for discovering, downloading, and streaming a vast collection of movies.
 
-## Getting Started
+## Overview
 
-Follow the instructions below to set up and run the project locally.
+KatMovieClone is a feature-rich web application designed to replicate the functionality of popular movie platforms. It provides users with the ability to register, explore an extensive movie database, download movies for offline viewing, and stream them online. The project incorporates robust security measures, user authentication, and an intuitive user interface.
 
-### Prerequisites
+## Features
 
-Make sure you have the following installed on your machine:
+- **User Authentication:** Secure user registration and login system.
+- **Movie Database:** Extensive collection of movies with detailed information.
+- **Movie Download:** Users can download movies for offline viewing.
+- **Movie Streaming:** Seamless online streaming with secure access.
+- **Search Functionality:** Advanced search capabilities based on title, genre, and more.
+- **Responsive Design:** A user-friendly interface optimized for various devices.
 
-- [Node.js](https://nodejs.org/)
-- [MongoDB](https://www.mongodb.com/try/download/community)
+## Table of Contents
 
-### Installation
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [File Structure](#file-structure)
+- [Technologies Used](#technologies-used)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Overview
+
+Provide a concise overview of your project, including its purpose and main features.
+
+## Features
+
+Highlight the key features of your project.
+
+- User authentication
+- Movie database
+- Movie download and streaming
+
+## Installation
 
 1. Clone the repository:
 
-    ```bash
-    git clone git@github.com:mohin-sheikh/video-streaming-platform.git
-    ```
+   ```bash
+   git clone git@github.com:mohin-sheikh/video-streaming-platform.git
+   ```
 
-2. Navigate to the project directory:
+2. Install dependencies:
 
-    ```bash
-    cd video-streaming-platform
-    ```
+   ```bash
+   cd your-project
+   npm install
+   ```
 
-3. Install dependencies:
+3. Set up the environment variables:
 
-    ```bash
-    npm install
-    ```
+   Create a `.env` file in the root directory and add the necessary environment variables.
 
-4. Create a `.env` file in the root directory and add the following:
+   ```env
+   PORT=3000
+   DATABASE_URL=mongodb://localhost:27017/your-database
+   SECRET_KEY=your-secret-key
+   # Add other environment variables as needed
+   ```
 
-    ```env
-    PORT=3000
-    MONGODB_URI=mongodb://localhost:27017/video_streaming_db
-    JWT_SECRET_KEY=your_secret_key
-    ```
+4. Run the application:
 
-    Replace `your_secret_key` with a secure secret key for JWT.
+   ```bash
+   npm start
+   ```
 
-### Run the Application
+## Usage
 
-Start the application with the following command:
-
-```bash
-npm start
-```
-
-The server will run at `http://localhost:3000`.
+Provide instructions on how to use your application, including any specific steps or commands.
 
 ## API Endpoints
 
-### User Authentication
+Document your API endpoints and their functionalities.
 
-- **POST /users/register**: Register a new user.
+- **POST /api/users/register**: Register a new user.
+- **POST /api/users/login**: Log in a user.
+- **GET /api/movies**: Get a list of movies.
+- **POST /api/movies/upload**: Upload a new movie.
+- **GET /api/movies/stream/:id**: Stream a movie.
 
-  Example Request:
+Add more details and examples as needed.
 
-  ```bash
-  curl -X POST http://localhost:3000/users/register -H "Content-Type: application/json" -d '{"username": "TestUser", "email": "testuser@example.com", "password": "password"}'
-  ```
+## File Structure
 
-- **POST /users/login**: Log in with an existing user.
-
-  Example Request:
-
-  ```bash
-  curl -X POST http://localhost:3000/users/login -H "Content-Type: application/json" -d '{"email": "testuser@example.com", "password": "password"}'
-  ```
-
-- **GET /users/profile**: Get user profile (protected route, requires authentication).
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/users/profile -H "x-auth-token: YOUR_JWT_TOKEN_HERE"
-  ```
-
-- **GET /users**: Get all users.
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/users
-  ```
-
-- **GET /users/:id**: Get user by ID.
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/users/USER_ID
-  ```
-
-- **PUT /users/:id**: Update user by ID.
-
-  Example Request:
-
-  ```bash
-  curl -X PUT http://localhost:3000/users/USER_ID -H "Content-Type: application/json" -d '{"username": "UpdatedUser", "email": "updateduser@example.com"}'
-  ```
-
-- **DELETE /users/:id**: Delete user by ID.
-
-  Example Request:
-
-  ```bash
-  curl -X DELETE http://localhost:3000/users/USER_ID
-  ```
-
-### Videos
-
-- **GET /videos**: Get all videos.
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/videos
-  ```
-
-- **GET /videos/:id**: Get video by ID.
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/videos/VIDEO_ID
-  ```
-
-- **POST /videos**: Create a new video.
-
-  Example Request:
-
-  ```bash
-  curl -X POST http://localhost:3000/videos -H "Content-Type: application/json" -d '{"title": "Sample Video", "url": "http://example.com/sample.mp4"}'
-  ```
-
-- **PUT /videos/:id**: Update video by ID.
-
-  Example Request:
-
-  ```bash
-  curl -X PUT http://localhost:3000/videos/VIDEO_ID -H "Content-Type: application/json" -d '{"title": "Updated Video Title", "url": "http://example.com/updated.mp4"}'
-  ```
-
-- **DELETE /videos/:id**: Delete video by ID.
-
-  Example Request:
-
-  ```bash
-  curl -X DELETE http://localhost:3000/videos/VIDEO_ID
-  ```
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+Explain the organization of your project's file structure.
 
 ```
+.
+├── src
+│   ├── controllers
+│   ├── models
+│   ├── routes
+│   ├── utils
+│   └── app.ts
+├── public
+│   └── uploads
+├── .env
+├── .gitignore
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+## Technologies Used
+
+List the main technologies and libraries used in your project.
+
+- Node.js
+- TypeScript
+- Express.js
+- MongoDB
+
+## Contributing
+
+Provide guidelines for contributing to your project. Include information on how to report issues and submit pull requests.
