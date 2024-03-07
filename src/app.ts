@@ -1,39 +1,26 @@
-import express from 'express';
-import 'dotenv/config'
-import mongoose from 'mongoose';
-import fileUpload from 'express-fileupload'
+import "dotenv/config";
+import logger from "./utils/logger";
+import dbConnect from "./utils/dbConnect";
+import config from "./config";
+import createServer from "./server";
 
-import videoRoutes from './routes/videoRoutes';
-import userRoutes from './routes/userRoutes';
-import errorHandler from './utils/errorHandler';
-
-const app = express();
-
-app.use(fileUpload())
-
-// Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Routes
-app.use('/videos', videoRoutes);
-app.use('/users', userRoutes);
-
-// Global Error Handler
-app.use(errorHandler);
-
-const PORT = process.env.PORT || 3000;
-
-const startServer = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI!);
-
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (error: Error | any) {
-    console.error('Error starting the server:', error.message);
+function areKeysOK(): boolean {
+  if (!config.privateKey || !config.publicKey) {
+    return false;
   }
-};
+  return true;
+}
 
-startServer();
+if (!areKeysOK()) {
+  logger.error("private and public key pairs are not properly set");
+  logger.error("please set these env variables and restart the server");
+  process.exit(1);
+}
+
+const app = createServer();
+
+app.listen(config.port, async () => {
+  logger.info(`Api version ${config.apiVersion}`);
+  logger.info(`Server Started - http://localhost:${config.port}`);
+  await dbConnect();
+});

@@ -1,162 +1,56 @@
-# Video Streaming Platform
+# Express typescript mongodb boilerplate
 
-This is a simple Video Streaming Platform developed using Node.js, Express.js, and TypeScript. The project includes user authentication with JWT, CRUD operations for videos, and user management.
+This is a boilerplate code for an express API with mongoose, written in
+typescript. Please replace the content with your own after cloning the repo.
 
-## Getting Started
+## Development
 
-Follow the instructions below to set up and run the project locally.
-
-### Prerequisites
-
-Make sure you have the following installed on your machine:
-
-- [Node.js](https://nodejs.org/)
-- [MongoDB](https://www.mongodb.com/try/download/community)
-
-### Installation
-
-1. Clone the repository:
-
-    ```bash
-    git clone git@github.com:mohin-sheikh/video-streaming-platform.git
-    ```
-
-2. Navigate to the project directory:
-
-    ```bash
-    cd video-streaming-platform
-    ```
-
-3. Install dependencies:
-
-    ```bash
-    npm install
-    ```
-
-4. Create a `.env` file in the root directory and add the following:
-
-    ```env
-    PORT=3000
-    MONGODB_URI=mongodb://localhost:27017/video_streaming_db
-    JWT_SECRET_KEY=your_secret_key
-    ```
-
-    Replace `your_secret_key` with a secure secret key for JWT.
-
-### Run the Application
-
-Start the application with the following command:
-
-```bash
-npm start
+- Make sure node 14 and above is installed.
+- Have mongodb running.
+- Install project dependencies with `npm i`.
+- For development, run
 ```
+$ npm run dev
+```
+- There is a pre-configured postman collection at [contrib/postman.json](contrib/postman.json)
+To use it, please set the postman envs
+  - `Host` as `http://localhost:3333`
+  - `ApiVersion` as `/api/v01`
 
-The server will run at `http://localhost:3000`.
-
-## API Endpoints
-
-### User Authentication
-
-- **POST /users/register**: Register a new user.
-
-  Example Request:
-
-  ```bash
-  curl -X POST http://localhost:3000/users/register -H "Content-Type: application/json" -d '{"username": "TestUser", "email": "testuser@example.com", "password": "password"}'
-  ```
-
-- **POST /users/login**: Log in with an existing user.
-
-  Example Request:
-
-  ```bash
-  curl -X POST http://localhost:3000/users/login -H "Content-Type: application/json" -d '{"email": "testuser@example.com", "password": "password"}'
-  ```
-
-- **GET /users/profile**: Get user profile (protected route, requires authentication).
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/users/profile -H "x-auth-token: YOUR_JWT_TOKEN_HERE"
-  ```
-
-- **GET /users**: Get all users.
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/users
-  ```
-
-- **GET /users/:id**: Get user by ID.
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/users/USER_ID
-  ```
-
-- **PUT /users/:id**: Update user by ID.
-
-  Example Request:
-
-  ```bash
-  curl -X PUT http://localhost:3000/users/USER_ID -H "Content-Type: application/json" -d '{"username": "UpdatedUser", "email": "updateduser@example.com"}'
-  ```
-
-- **DELETE /users/:id**: Delete user by ID.
-
-  Example Request:
-
-  ```bash
-  curl -X DELETE http://localhost:3000/users/USER_ID
-  ```
-
-### Videos
-
-- **GET /videos**: Get all videos.
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/videos
-  ```
-
-- **GET /videos/:id**: Get video by ID.
-
-  Example Request:
-
-  ```bash
-  curl http://localhost:3000/videos/VIDEO_ID
-  ```
-
-- **POST /videos**: Create a new video.
-
-  Example Request:
-
-  ```bash
-  curl -X POST http://localhost:3000/videos -H "Content-Type: application/json" -d '{"title": "Sample Video", "url": "http://example.com/sample.mp4"}'
-  ```
-
-- **PUT /videos/:id**: Update video by ID.
-
-  Example Request:
-
-  ```bash
-  curl -X PUT http://localhost:3000/videos/VIDEO_ID -H "Content-Type: application/json" -d '{"title": "Updated Video Title", "url": "http://example.com/updated.mp4"}'
-  ```
-
-- **DELETE /videos/:id**: Delete video by ID.
-
-  Example Request:
-
-  ```bash
-  curl -X DELETE http://localhost:3000/videos/VIDEO_ID
-  ```
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+## Request flow
 
 ```
+route --> validate middleware (uses schema) --> controller --> service
+```
+
+## Authentication
+
+- The session create endpoint returns an `accessToken` and `refreshToken`.
+- By default `accessToken` is valid for 15 minutes and `refreshToken` is valid for
+1 year.
+- All authenticated requests should contain the `accessToken` as a Bearer Token in
+the header and `refreshToken` may be added in the headers with key `x-refresh`.
+- If `accessToken` has expired and there is an unexpired `refreshToken`, the backend
+will re-issue a new `accessToken` in the response header `x-access-token`.
+- All autheticated requests will have this flow baked in.
+- Please refer the [postman collection](contrib/postman.json) for how that is setup.
+- JWTs are generated with private and public key pairs. Please refer to
+[.env.example](.env.example) for how to set one up. With out a key pair, the api
+wont start up!
+
+### Notes
+
+- `npx tsc --init` will create a `tsconfig.json` file. This configures the typescript
+compiler. In `tsconfig.json`, we specified `"outDir": "build",` to specify that
+a folder called `build` in the project folder is the destination for the
+typescript compiler i.e `tsc`. Check `package.json` file.
+
+- The `items` module is a test module to see how authenticated CRUD ops are handled.
+## Deployment
+
+```
+$ npm run build
+```
+
+This will create a `build` folder with js files that can be run with vanilla node.
+Ship the build folder in our docker image.
