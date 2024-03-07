@@ -9,8 +9,6 @@ import {
 
 import deserializeUser from "./middlewares/deserializeUser.middleware";
 
-// we will be using createServer to get back
-// an express app which can be used for testing later, if needed!
 function createServer() {
   const app = express();
 
