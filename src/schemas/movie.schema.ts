@@ -5,9 +5,6 @@ const commonFields = {
         title: string({
             required_error: "Title is required",
         }),
-        description: string({
-            required_error: "Description is required",
-        }).min(120, "Description should be at least 120 characters long"),
         releaseDate: string({
             required_error: "Release date is required",
         }),
