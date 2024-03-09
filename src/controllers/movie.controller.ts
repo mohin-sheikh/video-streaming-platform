@@ -10,7 +10,7 @@ import {
 import { CustomError } from "../utils/customError";
 
 export async function createMovieHandler(
-    req: Request<{}, {}, TCreateMovieSchema>,
+    req: Request<{}, {}, TCreateMovieSchema["body"]>,
     res: Response,
     next: NextFunction
 ) {
