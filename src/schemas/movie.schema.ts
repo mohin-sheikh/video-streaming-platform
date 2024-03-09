@@ -18,14 +18,6 @@ const commonFields = {
                 required_error: "ImageUrl is required",
             })
         ),
-        ratings: array(
-            object({
-                source: string(),
-                value: string(),
-            })
-        ),
-        imdbRating: string(),
-        imdbVotes: string(),
         type: string(),
         director: string({
             required_error: "Director is required",

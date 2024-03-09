@@ -1,17 +1,6 @@
 import mongoose from "mongoose";
 import customId from "../utils/customId";
 
-const ratingSchema = new mongoose.Schema({
-    source: {
-        type: String,
-        default: 'N/A',
-    },
-    value: {
-        type: String,
-        default: 'N/A',
-    },
-});
-
 const movieGenres = [
     "Action", "Adventure", "Animation", "Biography", "Comedy", "Crime",
     "Documentary", "Drama", "Family", "Fantasy", "Film Noir", "History",
@@ -31,6 +20,7 @@ export interface IMovieDocument extends mongoose.Document {
     }[];
     imdbRating: string;
     imdbVotes: string;
+    metaScore: string;
     type: string;
     director: string;
     runtime: string;
@@ -73,12 +63,27 @@ const movieSchema = new mongoose.Schema(
             type: [String],
             required: true,
         },
-        ratings: [ratingSchema],
+        ratings: [
+            {
+                source: {
+                    type: String,
+                    default: 'N/A',
+                },
+                value: {
+                    type: String,
+                    default: 'N/A',
+                },
+            },
+        ],
         imdbRating: {
             type: String,
             default: 'N/A',
         },
         imdbVotes: {
+            type: String,
+            default: 'N/A',
+        },
+        metaScore: {
             type: String,
             default: 'N/A',
         },

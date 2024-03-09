@@ -5,10 +5,22 @@ import {
     UpdateQuery,
 } from "mongoose";
 import movieModel, { IMovieDocument } from "../models/movie.model";
+import { getIMDbRating } from "./imdb.rating.service";
 
 export async function createMovieService(
     input: DocumentDefinition<Omit<IMovieDocument, "createdAt" | "updatedAt">>
 ) {
+    const getIMDBRating = await getIMDbRating(input.title);
+
+    if (getIMDBRating !== undefined && getIMDBRating !== null) {
+        const { imdbRating = "N/A", imdbVotes = "N/A", Metascore = "N/A", Ratings = [] } = getIMDBRating;
+
+        input.imdbRating = imdbRating;
+        input.imdbVotes = imdbVotes;
+        input.metaScore = Metascore;
+        input.ratings = Ratings.map(({ Source = "N/A", Value = "N/A" }) => ({ source: Source, value: Value }));
+    }
+
     return await movieModel.create(input);
 }
 

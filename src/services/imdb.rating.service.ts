@@ -7,8 +7,7 @@ export const getIMDbRating = async (movieTitle: string) => {
         const response = await axios.get(`http://www.omdbapi.com/?t=${movieTitle}&apikey=${apiKey}`);
 
         if (response.data && response.data.Response === 'True') {
-            const { Title, Year, imdbRating } = response.data;
-            console.log(`${Title} (${Year}) - IMDb Rating: ${imdbRating}`);
+            return response.data;
         } else {
             console.log(`Error: ${response.data.Error}`);
         }
