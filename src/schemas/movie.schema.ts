@@ -1,4 +1,4 @@
-import { object, string, date, array, TypeOf } from "zod";
+import { object, string, array, TypeOf } from "zod";
 
 const commonFields = {
     body: object({
