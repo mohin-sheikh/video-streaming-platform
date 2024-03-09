@@ -10,6 +10,7 @@ import { getIMDbRating } from "./imdb.rating.service";
 export async function createMovieService(
     input: DocumentDefinition<Omit<IMovieDocument, "createdAt" | "updatedAt">>
 ) {
+    input.title = input.title.trim();
     const getIMDBRating = await getIMDbRating(input.title);
 
     if (getIMDBRating !== undefined && getIMDBRating !== null) {
