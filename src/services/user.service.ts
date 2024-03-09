@@ -16,7 +16,7 @@ export async function isValidUserCredentialsService({
   email: string;
   password: string;
 }) {
-  const user = await UserModel.findOne({ email }, "userId password");
+  const user: any = await UserModel.findOne({ email }, "userId password");
   if (!user) {
     return false;
   }

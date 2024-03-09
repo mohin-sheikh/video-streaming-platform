@@ -22,7 +22,7 @@ export async function createUserSessionHandler(
     }
 
     // now we start creating the session
-    const session = await createSessionService(
+    const session: any = await createSessionService(
       user._id,
       req.get("user-agent") || ""
     );
