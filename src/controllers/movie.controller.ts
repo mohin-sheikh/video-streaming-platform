@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import {
     TCreateMovieSchema,
+    TGetMovieSchema,
 } from "../schemas/movie.schema";
 import {
-    createMovieService
+    createMovieService,
+    findMovieService
 } from "../services/movie.service";
+import { CustomError } from "../utils/customError";
 
 export async function createMovieHandler(
     req: Request<{}, {}, TCreateMovieSchema>,
@@ -13,12 +16,27 @@ export async function createMovieHandler(
 ) {
     const body: any = req.body;
 
-    // Manually parse releaseDate into a Date object
     if (body.releaseDate) {
         body.releaseDate = new Date(body.releaseDate);
     }
 
     const movie = await createMovieService(body);
+
+    return res.send({ movie });
+}
+
+
+export async function getMovieHandler(
+    req: Request<TGetMovieSchema["params"]>,
+    res: Response,
+    next: NextFunction
+) {
+    const movieId = req.params.movieId;
+    const movie = await findMovieService({ movieId });
+
+    if (!movie) {
+        return next(new CustomError("movie not found", 404));
+    }
 
     return res.send({ movie });
 }

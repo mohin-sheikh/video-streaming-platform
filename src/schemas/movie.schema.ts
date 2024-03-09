@@ -63,22 +63,24 @@ const commonFields = {
     })
 };
 
+const params = {
+    params: object({
+        movieId: string({
+            required_error: "movieId is required",
+        }),
+    }),
+};
+
 export const createMovieSchema = object({ ...commonFields });
 export const updateMovieSchema = object({
     ...commonFields,
-    movieId: string({
-        required_error: "MovieId is required",
-    }),
+    ...params
 });
 export const getMovieSchema = object({
-    movieId: string({
-        required_error: "MovieId is required",
-    }),
+    ...params
 });
 export const deleteMovieSchema = object({
-    movieId: string({
-        required_error: "MovieId is required",
-    }),
+    ...params
 });
 
 export type TCreateMovieSchema = TypeOf<typeof createMovieSchema>;
