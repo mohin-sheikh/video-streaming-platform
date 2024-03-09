@@ -22,7 +22,6 @@ const movieGenres = [
 export interface IMovieDocument extends mongoose.Document {
     movieId: string;
     title: string;
-    description: string;
     releaseDate: Date;
     genre: string[];
     imageUrl: string[];
@@ -58,10 +57,6 @@ const movieSchema = new mongoose.Schema(
             default: () => `movie_${customId()}`,
         },
         title: {
-            type: String,
-            required: true,
-        },
-        description: {
             type: String,
             required: true,
         },
