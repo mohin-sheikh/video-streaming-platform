@@ -21,11 +21,9 @@ KatMovieClone is a feature-rich web application designed to replicate the functi
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [API Endpoints](#api-endpoints)
+- [API Endpoints](API.md#api-endpoints)
 - [File Structure](#file-structure)
 - [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
@@ -58,7 +56,7 @@ Highlight the key features of your project.
 
    Create a `.env` file in the root directory and add the necessary environment variables.
 
-   ```env
+   ``` env
    PORT=3000
    DATABASE_URL=mongodb://localhost:27017/your-database
    SECRET_KEY=your-secret-key
@@ -67,7 +65,7 @@ Highlight the key features of your project.
 
 4. Run the application:
 
-   ```bash
+   ``` bash
    npm start
    ```
 
@@ -77,15 +75,7 @@ Provide instructions on how to use your application, including any specific step
 
 ## API Endpoints
 
-Document your API endpoints and their functionalities.
-
-- **POST /api/users/register**: Register a new user.
-- **POST /api/users/login**: Log in a user.
-- **GET /api/movies**: Get a list of movies.
-- **POST /api/movies/upload**: Upload a new movie.
-- **GET /api/movies/stream/:id**: Stream a movie.
-
-Add more details and examples as needed.
+For detailed information on the API endpoints and their functionalities, please refer to the [API.md](API.md) file.
 
 ## File Structure
 
@@ -105,7 +95,7 @@ Explain the organization of your project's file structure.
 ├── .gitignore
 ├── package.json
 ├── tsconfig.json
-└── README.md
+├── README.md
 ```
 
 ## Technologies Used
@@ -116,7 +106,3 @@ List the main technologies and libraries used in your project.
 - TypeScript
 - Express.js
 - MongoDB
-
-## Contributing
-
-Provide guidelines for contributing to your project. Include information on how to report issues and submit pull requests.
