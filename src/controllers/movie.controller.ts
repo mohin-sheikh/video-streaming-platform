@@ -33,11 +33,10 @@ export async function createMovieHandler(
         session.endSession();
 
         return res.send({ movie });
-    } catch (error) {
+    } catch (error: any) {
         await session.abortTransaction();
         session.endSession();
-
-        return next(error);
+        return next(new CustomError(error, 500));
     }
 }
 
@@ -51,12 +50,18 @@ export async function uploadFilesHandler(
     try {
         const movieId = req.body.movieId;
         if (!movieId || !req.files) {
-            throw new Error('movieId and files are required');
+            return next(new CustomError("movieId and files are required", 400));
         }
         const files: { images?: UploadedFile[]; movie?: UploadedFile } = {
             images: req.files?.images ? (Array.isArray(req.files.images) ? req.files.images : [req.files.images]) : undefined,
             movie: req.files?.movie ? (Array.isArray(req.files.movie) ? req.files.movie[0] : req.files.movie) : undefined,
         };
+
+        const { images } = files;
+
+        if (!images || images.length === 0) {
+            return next(new CustomError("At least one image file is required.", 400));
+        }
 
         const result = await uploadFilesService(files, movieId, session);
 
@@ -64,12 +69,10 @@ export async function uploadFilesHandler(
         session.endSession();
 
         return res.send(result);
-    } catch (error) {
+    } catch (error: any) {
         await session.abortTransaction();
         session.endSession();
-        console.error('error ---- ->', error);
-
-        return next(error);
+        return next(new CustomError(error, 500));
     }
 }
 

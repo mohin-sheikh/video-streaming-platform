@@ -43,14 +43,10 @@ export async function uploadFilesService(
 ) {
     const { images, movie } = files;
 
-    if (!images || images.length === 0) {
-        throw new Error('At least one image file is required.');
-    }
-
     let imageUrls = [];
     let movieKey;
 
-    for (const image of images) {
+    for (const image of images!) {
         const imageKey = `images/${new Date().toISOString().replace(/[\s:]+/g, '-')}${image.name.trim().replace(/\s/g, '_')}`;
         const imageParams = {
             Bucket: config.s3BucketName,
@@ -87,9 +83,6 @@ export async function findMovieService(
     query: FilterQuery<IMovieDocument>,
     options: QueryOptions = { lean: true }
 ) {
-    // the {} here is the projections
-    // it can also be a space separate string
-    // look in user.service.ts for an example
     return await MovieModel.findOne(query, {}, options);
 }
 
