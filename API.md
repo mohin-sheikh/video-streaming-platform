@@ -2,6 +2,11 @@
 
 Welcome to the documentation for the Clone Video Streaming API, providing you with details about the available endpoints and functionalities.
 
+## Postman Collection
+
+- [Collection](/contrib/Clone%20Video%20Streaming.postman_collection.json)
+- [Envouirment Variable](/contrib/VIDEO%20STREAMING%20DEV.postman_environment.json)
+
 ## Table of Contents
 
 - [Authentication](#authentication)
