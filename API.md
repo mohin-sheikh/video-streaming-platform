@@ -11,12 +11,12 @@ Welcome to the documentation for the Clone Video Streaming API, providing you wi
 
 - [Authentication](#authentication)
 - [User Endpoints](#user-endpoints)
-  - [Register User](#register-user)
-  - [Login User](#login-user)
+  - [Register User](#1-register-user)
+  - [Login User](#2-login-user)
 - [Movie Endpoints](#movie-endpoints)
-  - [Add Movie](#add-movie)
-  - [Upload Movie](#upload-movie)
-  - [Fetch Movie](#fetch-movie)
+  - [Add Movie](#1-add-movie)
+  - [Upload Movie](#2-upload-movie)
+  - [Fetch Movie](#3-fetch-movie)
 
 ## Authentication
 
