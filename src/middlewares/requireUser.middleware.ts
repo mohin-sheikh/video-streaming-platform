@@ -11,7 +11,7 @@ const requireUser = async (req: Request, res: Response, next: NextFunction) => {
 
   // we append the new user details from database, as we dont attach _id in
   // the jwt we sign during login
-  const userInfo = await findUserService({ userId: user.userId });
+  const userInfo = await findUserService({ userId: user.userId, isDeleted: false });
   if (!userInfo) {
     return next(new CustomError("Authorization failed", 403));
   }

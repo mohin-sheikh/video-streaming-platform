@@ -56,7 +56,7 @@ export async function reissueAccessToken({
     return "";
   }
 
-  const user = await findUserService({ _id: session.user });
+  const user = await findUserService({ _id: session.user, isDeleted: false });
 
   if (!user) {
     return false;

@@ -1,0 +1,413 @@
+{
+	"info": {
+		"_postman_id": "82e643f6-a029-4cdb-9f5a-1f4ef35426c0",
+		"name": "Clone Video Streaming",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18974135"
+	},
+	"item": [
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const requestBody = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"const email = requestBody.email;\r",
+									"const password = requestBody.password;\r",
+									"\r",
+									"pm.environment.set(\"email\", email);\r",
+									"pm.environment.set(\"password\", password);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"TestUser\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{version}}/users",
+							"host": [
+								"{{base_URL}}{{version}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Replace the raw JSON with your user registration data."
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - accessToken and refreshToken\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.accessToken).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.refreshToken).to.exist.and.to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"accessToken should be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.accessToken).to.be.a('string').and.to.have.lengthOf.at.least(1, \"accessToken should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"refreshToken is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{version}}/sessions",
+							"host": [
+								"{{base_URL}}{{version}}"
+							],
+							"path": [
+								"sessions"
+							]
+						},
+						"description": "Replace the raw JSON with your user registration data."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MOVIE",
+			"item": [
+				{
+					"name": "Add Movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{x-access-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Inception\",\r\n    \"releaseDate\": \"2022-03-08\",\r\n    \"genre\": [\r\n        \"Action\",\r\n        \"Adventure\",\r\n        \"Sci-Fi\"\r\n    ],\r\n    \"type\": \"Movie\",\r\n    \"director\": \"Christopher Nolan\",\r\n    \"runtime\": \"148 min\",\r\n    \"released\": \"2010-07-16\",\r\n    \"rated\": \"PG-13\",\r\n    \"year\": \"2010\",\r\n    \"quality\": \"1080p\",\r\n    \"writer\": \"Christopher Nolan\",\r\n    \"actors\": \"Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page\",\r\n    \"plot\": \"A thief who enters the dreams of others to steal their secrets.\",\r\n    \"language\": \"English\",\r\n    \"country\": \"USA\",\r\n    \"awards\": \"4 Oscars, 9 nominations\",\r\n    \"poster\": \"https://example.com/inception_poster.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{version}}/movie",
+							"host": [
+								"{{base_URL}}{{version}}"
+							],
+							"path": [
+								"movie"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{x-access-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/C:/Users/mohin/Pictures/Screenshots/MOHIN.png",
+										"/C:/Users/mohin/Pictures/Screenshots/Screenshot 2024-03-10 020441.png"
+									]
+								},
+								{
+									"key": "movie",
+									"type": "file",
+									"src": "/C:/Users/mohin/Downloads/10 SECOND TIMER ⏲️.mp4"
+								},
+								{
+									"key": "movieId",
+									"value": "movie_yqabd4pr8q",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_URL}}{{version}}/movie/upload",
+							"host": [
+								"{{base_URL}}{{version}}"
+							],
+							"path": [
+								"movie",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{x-access-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{version}}/movie/movie_yqabd4pr8q",
+							"host": [
+								"{{base_URL}}{{version}}"
+							],
+							"path": [
+								"movie",
+								"movie_yqabd4pr8q"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SESSION",
+			"item": [
+				{
+					"name": "Get Sessions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-refresh",
+								"value": "{{refreshToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"mikasa@mailinator.com\",\n    \"password\": \"Pass1234#\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{version}}/sessions",
+							"host": [
+								"{{base_URL}}{{version}}"
+							],
+							"path": [
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-refresh",
+								"value": "{{refreshToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"mikasa@mailinator.com\",\n    \"password\": \"Pass1234#\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{version}}/sessions",
+							"host": [
+								"{{base_URL}}{{version}}"
+							],
+							"path": [
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

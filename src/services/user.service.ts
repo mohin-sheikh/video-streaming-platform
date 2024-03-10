@@ -9,6 +9,18 @@ export async function createUserService(
   return await UserModel.create(input);
 }
 
+export async function findByEmailUserService({
+  email
+}: {
+  email: string;
+}) {
+  const user: any = await UserModel.findOne({ email, isDeleted: false }, "userId password");
+  if (!user) {
+    return false;
+  }
+  return true;
+}
+
 export async function isValidUserCredentialsService({
   email,
   password,

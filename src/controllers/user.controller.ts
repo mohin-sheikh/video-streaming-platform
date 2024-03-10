@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { TCreateUserSchema } from "../schemas/user.schema";
-import { createUserService } from "../services/user.service";
+import { createUserService, findByEmailUserService } from "../services/user.service";
 import { CustomError } from "../utils/customError";
 import logger from "../utils/logger";
 
@@ -10,6 +10,10 @@ export async function createUserHandler(
   next: NextFunction
 ) {
   try {
+    const checkUserExist = await findByEmailUserService({ email: req.body.email });
+    if (checkUserExist) {
+      return next(new CustomError("Email already in use", 409));
+    }
     const user = await createUserService(req.body);
     const userResponse = {
       name: user.name,
