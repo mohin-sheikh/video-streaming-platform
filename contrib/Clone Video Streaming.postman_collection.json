@@ -61,7 +61,128 @@
 						},
 						"description": "Replace the raw JSON with your user registration data."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"TestUser\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_URL}}{{version}}/users",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "86"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"56-UcmPPLY4qBtfweCxPYImE4nE57g\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:26:27 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"name\": \"TestUser\",\n        \"email\": \"testuser@example.com\",\n        \"userId\": \"user_zalvp8nxlv\"\n    }\n}"
+						},
+						{
+							"name": "Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"TestUser\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_URL}}{{version}}/users",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "67"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"43-My1dtgS96weZzd+s+tBiHjqQEWw\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:26:51 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Email already in use\",\n    \"status\": 409,\n    \"additionalInfo\": {}\n}"
+						}
+					]
 				},
 				{
 					"name": "Login User",
@@ -79,37 +200,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Response status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
+									"const jsonData = JSON.parse(responseBody);",
+									"const accessToken = jsonData.accessToken;",
+									"const refreshToken = jsonData.refreshToken;",
 									"",
+									"if (accessToken && refreshToken) {",
+									"    postman.setEnvironmentVariable(\"x-access-token\", accessToken);",
+									"    postman.setEnvironmentVariable(\"x-refresh-token\", refreshToken);",
 									"",
-									"pm.test(\"Response has the required fields - accessToken and refreshToken\", function () {",
-									"    const responseData = pm.response.json();",
-									"    ",
-									"    pm.expect(responseData).to.be.an('object');",
-									"    pm.expect(responseData.accessToken).to.exist.and.to.be.a('string');",
-									"    pm.expect(responseData.refreshToken).to.exist.and.to.be.a('string');",
-									"});",
-									"",
-									"",
-									"pm.test(\"accessToken should be a non-empty string\", function () {",
-									"    const responseData = pm.response.json();",
-									"    ",
-									"    pm.expect(responseData.accessToken).to.be.a('string').and.to.have.lengthOf.at.least(1, \"accessToken should not be empty\");",
-									"});",
-									"",
-									"",
-									"pm.test(\"refreshToken is a non-empty string\", function () {",
-									"    const responseData = pm.response.json();",
-									"",
-									"    pm.expect(responseData.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-									"});",
-									"",
-									"",
-									"pm.test(\"Response time is less than 500ms\", function () {",
-									"  pm.expect(pm.response.responseTime).to.be.below(500);",
-									"});"
+									"}",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -138,7 +238,68 @@
 						},
 						"description": "Replace the raw JSON with your user registration data."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_URL}}{{version}}/sessions",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"sessions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1060"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"424-YIOP1pLj6EXaok15je2L4wZvXkA\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:27:15 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyX3phbHZwOG54bHYiLCJzZXNzaW9uIjoiNjVlZTA5OTMzNmY0ZTgyNzdkZTQ2OTM4IiwiaWF0IjoxNzEwMDk4ODM1LCJleHAiOjE3MTAwOTk3MzV9.JDk_7jHsuzzKrxxRlgup7wjDrq5dVOXlBiPI3I-bdqciRHPBgdeUiHhJK4_R-_ihKQ_7Hy_Up_etVIaSbCLRYwwVemOHU1RugiKwtrxIJRwELIShzAiEvUAqztRah4qg1StlXR_eozDvYPZWRp5oJ_3G9hfSw-4cXiqZYPIV_WOQw5R_NXNm7xTqQnnsdBElDQPNev-4snTKGXmvlkdMfkM5B5-C7dM2RvMbqxSIIVk-GDpWTnQ6vcKajP7q8IUa9W_S4XHn3qhlKYUOk5tavfgn4fSXaQ5V4S4lijE52w-1KbSe5tDGzKqEjxFSFOtQEj028zutdnmVIHKusLK5XQ\",\n    \"refreshToken\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyX3phbHZwOG54bHYiLCJzZXNzaW9uIjoiNjVlZTA5OTMzNmY0ZTgyNzdkZTQ2OTM4IiwiaWF0IjoxNzEwMDk4ODM1LCJleHAiOjE3NDE2NTY0MzV9.hbyeEak1fIhKHwV3NQHdQPkGQe9QtAWiZo1nssZXmcIAzRhowBm5jQ_v4XUcy4CJ_QQ1RvZX8FtlBnXbeSSpJxZigGQtuqkVv3RoW7UEhE8i1oQWRCkaJfbAt7o4AvtIyNb1vLjbPpyrPqPRA42nFzRHcktwCekG9bIcOLy9lcSzmE15IsojCl5qw6_pHGsCcMppxsTOlFTK3z9tT7yL2wrsEqWfMbKtB-FbPQP-QtGfjfH11FbzYX0XyAN1pb4W67ldVk4N9HHNZC3O0-XW6yj87arUTNPQWsDMB5CG3XLKJQPDWSCHCyWYufLZREmbnFcjOoIJcWoAE2tbBAs21w\"\n}"
+						}
+					]
 				}
 			]
 		},
@@ -186,7 +347,74 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{x-access-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Inception\",\r\n    \"releaseDate\": \"2022-03-08\",\r\n    \"genre\": [\r\n        \"Action\",\r\n        \"Adventure\",\r\n        \"Sci-Fi\"\r\n    ],\r\n    \"type\": \"Movie\",\r\n    \"director\": \"Christopher Nolan\",\r\n    \"runtime\": \"148 min\",\r\n    \"released\": \"2010-07-16\",\r\n    \"rated\": \"PG-13\",\r\n    \"year\": \"2010\",\r\n    \"quality\": \"1080p\",\r\n    \"writer\": \"Christopher Nolan\",\r\n    \"actors\": \"Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page\",\r\n    \"plot\": \"A thief who enters the dreams of others to steal their secrets.\",\r\n    \"language\": \"English\",\r\n    \"country\": \"USA\",\r\n    \"awards\": \"4 Oscars, 9 nominations\",\r\n    \"poster\": \"https://example.com/inception_poster.jpg\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_URL}}{{version}}/movie",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"movie"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1004"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3ec-/2LW7TYvX8UZ8jxnzIImJH0seTc\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:38:05 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"movie\": [\n        {\n            \"title\": \"Inception\",\n            \"releaseDate\": \"2022-03-08T00:00:00.000Z\",\n            \"genre\": [\n                \"Action\",\n                \"Adventure\",\n                \"Sci-Fi\"\n            ],\n            \"imageUrl\": [],\n            \"ratings\": [\n                {\n                    \"source\": \"Internet Movie Database\",\n                    \"value\": \"8.8/10\",\n                    \"_id\": \"65ee0c1d36f4e8277de46954\"\n                },\n                {\n                    \"source\": \"Rotten Tomatoes\",\n                    \"value\": \"87%\",\n                    \"_id\": \"65ee0c1d36f4e8277de46955\"\n                },\n                {\n                    \"source\": \"Metacritic\",\n                    \"value\": \"74/100\",\n                    \"_id\": \"65ee0c1d36f4e8277de46956\"\n                }\n            ],\n            \"imdbRating\": \"8.8\",\n            \"imdbVotes\": \"2,530,924\",\n            \"metaScore\": \"74\",\n            \"quality\": \"1080p\",\n            \"type\": \"Movie\",\n            \"director\": \"Christopher Nolan\",\n            \"runtime\": \"148 min\",\n            \"released\": \"2010-07-16\",\n            \"rated\": \"PG-13\",\n            \"year\": \"2010\",\n            \"writer\": \"Christopher Nolan\",\n            \"actors\": \"Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page\",\n            \"plot\": \"A thief who enters the dreams of others to steal their secrets.\",\n            \"language\": \"English\",\n            \"country\": \"USA\",\n            \"awards\": \"4 Oscars, 9 nominations\",\n            \"poster\": \"https://example.com/inception_poster.jpg\",\n            \"_id\": \"65ee0c1d36f4e8277de46953\",\n            \"movieId\": \"movie_sfhwyqm8s4\",\n            \"createdAt\": \"2024-03-10T19:38:05.523Z\",\n            \"updatedAt\": \"2024-03-10T19:38:05.523Z\"\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Upload Movie",
@@ -228,7 +456,7 @@
 								},
 								{
 									"key": "movieId",
-									"value": "movie_yqabd4pr8q",
+									"value": "movie_b2bp6jxq8p",
 									"type": "text"
 								}
 							]
@@ -244,7 +472,252 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{x-access-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "images",
+											"type": "file",
+											"src": [
+												"/C:/Users/mohin/Pictures/Screenshots/MOHIN.png",
+												"/C:/Users/mohin/Pictures/Screenshots/Screenshot 2024-03-10 020441.png"
+											]
+										},
+										{
+											"key": "movie",
+											"type": "file",
+											"src": "/C:/Users/mohin/Downloads/10 SECOND TIMER ⏲️.mp4"
+										},
+										{
+											"key": "movieId",
+											"value": "movie_sfhwyqm8s4",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_URL}}{{version}}/movie/upload",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"movie",
+										"upload"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1232"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"4d0-3RRBUldpEasGyR05dyo//MoiyWg\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:38:54 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"movie\": {\n        \"_id\": \"65ee0c1d36f4e8277de46953\",\n        \"title\": \"Inception\",\n        \"releaseDate\": \"2022-03-08T00:00:00.000Z\",\n        \"genre\": [\n            \"Action\",\n            \"Adventure\",\n            \"Sci-Fi\"\n        ],\n        \"imageUrl\": [\n            \"https://video-streaming-platform.s3.ap-south-1.amazonaws.com/images/2024-03-10T19-38-53.600ZMOHIN.png\",\n            \"https://video-streaming-platform.s3.ap-south-1.amazonaws.com/images/2024-03-10T19-38-53.765ZScreenshot_2024-03-10_020441.png\"\n        ],\n        \"ratings\": [\n            {\n                \"source\": \"Internet Movie Database\",\n                \"value\": \"8.8/10\",\n                \"_id\": \"65ee0c1d36f4e8277de46954\"\n            },\n            {\n                \"source\": \"Rotten Tomatoes\",\n                \"value\": \"87%\",\n                \"_id\": \"65ee0c1d36f4e8277de46955\"\n            },\n            {\n                \"source\": \"Metacritic\",\n                \"value\": \"74/100\",\n                \"_id\": \"65ee0c1d36f4e8277de46956\"\n            }\n        ],\n        \"imdbRating\": \"8.8\",\n        \"imdbVotes\": \"2,530,924\",\n        \"metaScore\": \"74\",\n        \"quality\": \"1080p\",\n        \"type\": \"Movie\",\n        \"director\": \"Christopher Nolan\",\n        \"runtime\": \"148 min\",\n        \"released\": \"2010-07-16\",\n        \"rated\": \"PG-13\",\n        \"year\": \"2010\",\n        \"writer\": \"Christopher Nolan\",\n        \"actors\": \"Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page\",\n        \"plot\": \"A thief who enters the dreams of others to steal their secrets.\",\n        \"language\": \"English\",\n        \"country\": \"USA\",\n        \"awards\": \"4 Oscars, 9 nominations\",\n        \"poster\": \"https://example.com/inception_poster.jpg\",\n        \"movieId\": \"movie_sfhwyqm8s4\",\n        \"createdAt\": \"2024-03-10T19:38:05.523Z\",\n        \"updatedAt\": \"2024-03-10T19:38:54.265Z\"\n    }\n}"
+						},
+						{
+							"name": "Error Response - Not Found Movie",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{x-access-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "images",
+											"type": "file",
+											"src": [
+												"/C:/Users/mohin/Pictures/Screenshots/MOHIN.png",
+												"/C:/Users/mohin/Pictures/Screenshots/Screenshot 2024-03-10 020441.png"
+											]
+										},
+										{
+											"key": "movie",
+											"type": "file",
+											"src": "/C:/Users/mohin/Downloads/10 SECOND TIMER ⏲️.mp4"
+										},
+										{
+											"key": "movieId",
+											"value": "movie_b2bp6jxq8pe",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_URL}}{{version}}/movie/upload",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"movie",
+										"upload"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "62"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3e-WlQ+pB6lCIuKbcq3efn6zW4A1BI\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:42:35 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"movie not found\",\n    \"status\": 404,\n    \"additionalInfo\": {}\n}"
+						},
+						{
+							"name": "Error Response - Field Required",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{x-access-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "images",
+											"type": "file",
+											"src": [
+												"/C:/Users/mohin/Pictures/Screenshots/MOHIN.png",
+												"/C:/Users/mohin/Pictures/Screenshots/Screenshot 2024-03-10 020441.png"
+											],
+											"disabled": true
+										},
+										{
+											"key": "movie",
+											"type": "file",
+											"src": "/C:/Users/mohin/Downloads/10 SECOND TIMER ⏲️.mp4"
+										},
+										{
+											"key": "movieId",
+											"value": "movie_b2bp6jxq8p",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_URL}}{{version}}/movie/upload",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"movie",
+										"upload"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "83"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"53-Qa4yvAHz4QmfJMHW8L5LgKcf4GQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:43:16 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"At least one image file is required.\",\n    \"status\": 400,\n    \"additionalInfo\": {}\n}"
+						}
+					]
 				},
 				{
 					"name": "Fetch Movie",
@@ -259,9 +732,6 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -271,27 +741,135 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{base_URL}}{{version}}/movie/movie_yqabd4pr8q",
+							"raw": "{{base_URL}}{{version}}/movie/movie_b2bp6jxq8p",
 							"host": [
 								"{{base_URL}}{{version}}"
 							],
 							"path": [
 								"movie",
-								"movie_yqabd4pr8q"
+								"movie_b2bp6jxq8p"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{x-access-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_URL}}{{version}}/movie/movie_b2bp6jxq8pd",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"movie",
+										"movie_b2bp6jxq8pd"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1232"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"4d0-jPIbpsogcRLNz+nU8YTV9xlOFUQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:44:28 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"movie\": {\n        \"_id\": \"65ee0d0fbf0cb39420c3c93c\",\n        \"title\": \"Inception\",\n        \"releaseDate\": \"2022-03-08T00:00:00.000Z\",\n        \"genre\": [\n            \"Action\",\n            \"Adventure\",\n            \"Sci-Fi\"\n        ],\n        \"imageUrl\": [\n            \"https://video-streaming-platform.s3.ap-south-1.amazonaws.com/images/2024-03-10T19-44-01.366ZMOHIN.png\",\n            \"https://video-streaming-platform.s3.ap-south-1.amazonaws.com/images/2024-03-10T19-44-01.499ZScreenshot_2024-03-10_020441.png\"\n        ],\n        \"ratings\": [\n            {\n                \"source\": \"Internet Movie Database\",\n                \"value\": \"8.8/10\",\n                \"_id\": \"65ee0d0fbf0cb39420c3c93d\"\n            },\n            {\n                \"source\": \"Rotten Tomatoes\",\n                \"value\": \"87%\",\n                \"_id\": \"65ee0d0fbf0cb39420c3c93e\"\n            },\n            {\n                \"source\": \"Metacritic\",\n                \"value\": \"74/100\",\n                \"_id\": \"65ee0d0fbf0cb39420c3c93f\"\n            }\n        ],\n        \"imdbRating\": \"8.8\",\n        \"imdbVotes\": \"2,530,924\",\n        \"metaScore\": \"74\",\n        \"quality\": \"1080p\",\n        \"type\": \"Movie\",\n        \"director\": \"Christopher Nolan\",\n        \"runtime\": \"148 min\",\n        \"released\": \"2010-07-16\",\n        \"rated\": \"PG-13\",\n        \"year\": \"2010\",\n        \"writer\": \"Christopher Nolan\",\n        \"actors\": \"Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page\",\n        \"plot\": \"A thief who enters the dreams of others to steal their secrets.\",\n        \"language\": \"English\",\n        \"country\": \"USA\",\n        \"awards\": \"4 Oscars, 9 nominations\",\n        \"poster\": \"https://example.com/inception_poster.jpg\",\n        \"movieId\": \"movie_b2bp6jxq8p\",\n        \"createdAt\": \"2024-03-10T19:42:07.334Z\",\n        \"updatedAt\": \"2024-03-10T19:44:01.940Z\"\n    }\n}"
+						},
+						{
+							"name": "Error Response - Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{x-access-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_URL}}{{version}}/movie/movie_b2bp6jxq8pd",
+									"host": [
+										"{{base_URL}}{{version}}"
+									],
+									"path": [
+										"movie",
+										"movie_b2bp6jxq8pd"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "62"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3e-WlQ+pB6lCIuKbcq3efn6zW4A1BI\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 10 Mar 2024 19:44:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"movie not found\",\n    \"status\": 404,\n    \"additionalInfo\": {}\n}"
+						}
+					]
 				}
 			]
 		},

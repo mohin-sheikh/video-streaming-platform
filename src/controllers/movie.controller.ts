@@ -62,6 +62,10 @@ export async function uploadFilesHandler(
         if (!images || images.length === 0) {
             return next(new CustomError("At least one image file is required.", 400));
         }
+        const findMovie = await findMovieService({ movieId });
+        if (!findMovie) {
+            return next(new CustomError("movie not found", 404));
+        }
 
         const result = await uploadFilesService(files, movieId, session);
 
