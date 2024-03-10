@@ -13,14 +13,12 @@ const commonFields = {
                 required_error: "Genre is required",
             })
         ),
-        imageUrl: array(
-            string({
-                required_error: "ImageUrl is required",
-            })
-        ),
         type: string(),
         director: string({
             required_error: "Director is required",
+        }),
+        quality: string({
+            required_error: "quality is required",
         }),
         runtime: string({
             required_error: "Runtime is required",

@@ -5,26 +5,73 @@ import {
 } from "../schemas/movie.schema";
 import {
     createMovieService,
-    findMovieService
+    findMovieService,
+    uploadFilesService
 } from "../services/movie.service";
 import { CustomError } from "../utils/customError";
+import mongoose from "mongoose";
+import { UploadedFile } from "express-fileupload";
 
 export async function createMovieHandler(
     req: Request<{}, {}, TCreateMovieSchema["body"]>,
     res: Response,
     next: NextFunction
 ) {
-    const body: any = req.body;
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    if (body.releaseDate) {
-        body.releaseDate = new Date(body.releaseDate);
+    try {
+        const body: any = req.body;
+
+        if (body.releaseDate) {
+            body.releaseDate = new Date(body.releaseDate);
+        }
+
+        const movie = await createMovieService(body, session);
+
+        await session.commitTransaction();
+        session.endSession();
+
+        return res.send({ movie });
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+
+        return next(error);
     }
-
-    const movie = await createMovieService(body);
-
-    return res.send({ movie });
 }
 
+export async function uploadFilesHandler(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const movieId = req.body.movieId;
+        if (!movieId || !req.files) {
+            throw new Error('movieId and files are required');
+        }
+        const files: { images?: UploadedFile[]; movie?: UploadedFile } = {
+            images: req.files?.images ? (Array.isArray(req.files.images) ? req.files.images : [req.files.images]) : undefined,
+            movie: req.files?.movie ? (Array.isArray(req.files.movie) ? req.files.movie[0] : req.files.movie) : undefined,
+        };
+
+        const result = await uploadFilesService(files, movieId, session);
+
+        await session.commitTransaction();
+        session.endSession();
+
+        return res.send(result);
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        console.error('error ---- ->', error);
+
+        return next(error);
+    }
+}
 
 export async function getMovieHandler(
     req: Request<TGetMovieSchema["params"]>,

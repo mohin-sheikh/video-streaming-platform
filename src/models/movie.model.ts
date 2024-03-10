@@ -61,7 +61,7 @@ const movieSchema = new mongoose.Schema(
         },
         imageUrl: {
             type: [String],
-            required: true,
+            required: false,
         },
         ratings: [
             {
@@ -86,6 +86,10 @@ const movieSchema = new mongoose.Schema(
         metaScore: {
             type: String,
             default: 'N/A',
+        },
+        quality: {
+            type: String,
+            required: true,
         },
         type: String,
         director: {

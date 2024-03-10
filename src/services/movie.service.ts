@@ -1,14 +1,25 @@
 import {
+    ClientSession,
     DocumentDefinition,
     FilterQuery,
     QueryOptions,
     UpdateQuery,
 } from "mongoose";
-import movieModel, { IMovieDocument } from "../models/movie.model";
+import MovieModel, { IMovieDocument } from "../models/movie.model";
 import { getIMDbRating } from "./imdb.rating.service";
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import config from "../config";
+import { UploadedFile } from "express-fileupload";
 
+const s3 = new S3Client({
+    credentials: {
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
+    },
+});
 export async function createMovieService(
-    input: DocumentDefinition<Omit<IMovieDocument, "createdAt" | "updatedAt">>
+    input: DocumentDefinition<Omit<IMovieDocument, "createdAt" | "updatedAt">>,
+    session: ClientSession
 ) {
     input.title = input.title.trim();
     const getIMDBRating = await getIMDbRating(input.title);
@@ -22,7 +33,54 @@ export async function createMovieService(
         input.ratings = Ratings.map(({ Source = "N/A", Value = "N/A" }) => ({ source: Source, value: Value }));
     }
 
-    return await movieModel.create(input);
+    return await MovieModel.create([input], { session });
+}
+
+export async function uploadFilesService(
+    files: { images?: UploadedFile[]; movie?: UploadedFile },
+    movieId: string,
+    session: ClientSession
+) {
+    const { images, movie } = files;
+
+    if (!images || images.length === 0) {
+        throw new Error('At least one image file is required.');
+    }
+
+    let imageUrls = [];
+    let movieKey;
+
+    for (const image of images) {
+        const imageKey = `images/${new Date().toISOString().replace(/[\s:]+/g, '-')}${image.name.trim().replace(/\s/g, '_')}`;
+        const imageParams = {
+            Bucket: config.s3BucketName,
+            Key: imageKey,
+            Body: image.data,
+        };
+        await s3.send(new PutObjectCommand(imageParams));
+        imageUrls.push(`https://${config.s3BucketName}.s3.${config.s3BucketRegion}.amazonaws.com/${imageKey}`);
+    }
+
+    if (movie) {
+        movieKey = `movies/${new Date().toISOString().replace(/[\s:]+/g, '-')}${movie.name.trim().replace(/\s/g, '_')}`;
+        const movieParams = {
+            Bucket: config.s3BucketName,
+            Key: movieKey,
+            Body: movie.data,
+        };
+        await s3.send(new PutObjectCommand(movieParams));
+    }
+
+    const movieDocument = {
+        imageUrl: imageUrls,
+        movieUrl: movie ? `https://${config.s3BucketName}.s3.${config.s3BucketRegion}.amazonaws.com/${movieKey}` : '',
+    };
+
+    await MovieModel.updateOne({ movieId }, movieDocument, { session });
+
+    const updatedMovie = await MovieModel.findOne({ movieId }).session(session);
+
+    return { movie: updatedMovie };
 }
 
 export async function findMovieService(
@@ -32,7 +90,7 @@ export async function findMovieService(
     // the {} here is the projections
     // it can also be a space separate string
     // look in user.service.ts for an example
-    return await movieModel.findOne(query, {}, options);
+    return await MovieModel.findOne(query, {}, options);
 }
 
 export async function findAndUpdateMovieService(
@@ -40,9 +98,9 @@ export async function findAndUpdateMovieService(
     update: UpdateQuery<IMovieDocument>,
     options: QueryOptions
 ) {
-    return await movieModel.findOneAndUpdate(query, update, options);
+    return await MovieModel.findOneAndUpdate(query, update, options);
 }
 
 export async function deleteMovieService(query: FilterQuery<IMovieDocument>) {
-    return await movieModel.deleteOne(query);
+    return await MovieModel.deleteOne(query);
 }
